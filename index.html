@@ -380,7 +380,7 @@ const IMGS = {
 const WA_NUMBER = "5492392584053";
 let selectedPayment = null;
 
-const products = [
+const local_products_backup = [
   {id:1,  name:"Alamos Malbec",                      brand:"Alamos",          type:"tinto",   varietal:"Malbec · Mendoza",                    cajaPrice:35040,  botPrice:5840,  vintage:"",     badge:"",            imgKey:"alamos"},
   {id:2,  name:"Angelica Zapata Malbec 2021",         brand:"Angelica Zapata", type:"tinto",   varietal:"Malbec Alta · x4 botellas",           cajaPrice:95000,  botPrice:23750, vintage:"2021", badge:"Premium",     imgKey:"angelica_malbec"},
   {id:3,  name:"Angelica Zapata Cabernet Franc 2021", brand:"Angelica Zapata", type:"tinto",   varietal:"Cabernet Franc · x4 botellas",        cajaPrice:85000,  botPrice:21250, vintage:"2021", badge:"Premium",     imgKey:"angelica_cabfranc", imgScale:1.35},
@@ -446,7 +446,7 @@ function renderProducts(list){
     return;
   }
   list.forEach((p,i)=>{
-    const imgSrc=IMGS[p.imgKey]||"";
+    const imgSrc=p.customImg || IMGS[p.imgKey]||"";
     const badgeHtml=p.badge?`<div class="${badgeClass(p.badge)}">${p.badge}</div>`:"";
     const vintTag=p.vintage?` · ${p.vintage}`:"";
     const cajaHtml=p.cajaPrice>0
@@ -624,7 +624,21 @@ function showToast(msg){
   setTimeout(()=>t.classList.remove("show"),2000);
 }
 
-renderProducts(products);
+let products = [];
+fetch('/.netlify/functions/admin-api')
+  .then(res => res.json())
+  .then(data => {
+    products = data;
+    renderProducts(products);
+  })
+  .catch(err => {
+    console.error("Error", err);
+    if(typeof local_products_backup !== 'undefined') {
+      products = local_products_backup;
+      renderProducts(products);
+    }
+  });
 </script>
 </body>
 </html>
+

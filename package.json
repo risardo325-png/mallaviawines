@@ -1,0 +1,12 @@
+{
+  "name": "mallavia-app",
+  "version": "1.0.0",
+  "description": "Mallaviá Admin with Netlify Blobs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@netlify/blobs": "^7.3.0"
+  }
+}

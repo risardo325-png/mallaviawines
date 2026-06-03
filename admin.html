@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mallaviá — Admin Panel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --black:#0B0B0B; --black2:#111010; --cream:#F5F1E8;
+  --gold:#C8A96A; --gold-light:#E2C98A; --burgundy:#6B1F2A;
+  --muted:#888880; --serif:'Cormorant Garamond',Georgia,serif;
+  --sans:'Jost',sans-serif; --card-bg:#161412; --border:rgba(200,169,106,0.12);
+}
+body { background:var(--black); color:var(--cream); font-family:var(--sans); font-weight:300; overflow-x:hidden; padding: 40px; }
+
+header { border-bottom:1px solid var(--border); padding-bottom: 20px; margin-bottom: 40px; display:flex; justify-content: space-between; align-items:center; }
+.admin-title { font-family:var(--serif); font-size:32px; font-weight:300; color:var(--cream); }
+.admin-title em { font-style:italic; color:var(--gold); }
+.back-link { font-family:var(--sans); font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--gold); text-decoration: none; border: 1px solid var(--gold); padding: 8px 16px; transition: all 0.2s; }
+.back-link:hover { background: var(--gold); color: var(--black); }
+
+/* Login Modal */
+#loginOverlay { position: fixed; inset: 0; background: rgba(11,11,11,0.95); z-index: 1000; display: flex; align-items: center; justify-content: center; }
+.login-box { background: var(--card-bg); padding: 40px; border: 1px solid var(--gold); text-align: center; width: 100%; max-width: 400px; }
+.login-title { font-family: var(--serif); font-size: 24px; color: var(--cream); margin-bottom: 20px; }
+.login-input { width: 100%; background:rgba(255,255,255,.04); border:1px solid var(--border); padding:12px; font-family:var(--sans); font-size:16px; color:var(--cream); outline:none; text-align: center; letter-spacing: 4px; margin-bottom: 20px; }
+.login-btn { width: 100%; background:var(--gold); border:none; padding:12px; font-family:var(--sans); font-size:12px; font-weight:500; letter-spacing:3px; text-transform:uppercase; color:var(--black); cursor:pointer; }
+
+.container { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+@media (max-width: 800px) { .container { grid-template-columns: 1fr; } }
+
+.panel { background:var(--card-bg); border:1px solid rgba(200,169,106,.15); padding: 30px; }
+.panel-title { font-family:var(--sans); font-size:14px; letter-spacing:4px; text-transform:uppercase; color:var(--gold); margin-bottom:24px; border-bottom: 1px solid var(--border); padding-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+
+.form-group { margin-bottom: 16px; }
+.form-group label { display: block; font-family:var(--sans); font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-bottom: 6px; }
+.form-group input, .form-group select { width: 100%; background:rgba(255,255,255,.04); border:1px solid var(--border); padding:10px 16px; font-family:var(--sans); font-size:14px; color:var(--cream); outline:none; transition:border-color .2s; }
+.form-group input:focus, .form-group select:focus { border-color:rgba(200,169,106,.4); }
+.form-group select option { background: var(--black2); }
+
+.help-text { font-size: 11px; color: var(--muted); margin-top: 4px; display: block; }
+
+.btn-submit { display:inline-block; width: 100%; background:var(--gold); border:none; padding:12px; font-family:var(--sans); font-size:12px; font-weight:500; letter-spacing:3px; text-transform:uppercase; color:var(--black); cursor:pointer; transition:background .2s; margin-top: 10px; }
+.btn-submit:hover { background:var(--gold-light); }
+.btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-cancel { display:none; width: 100%; background:transparent; border:1px solid var(--muted); padding:12px; font-family:var(--sans); font-size:12px; letter-spacing:3px; text-transform:uppercase; color:var(--muted); cursor:pointer; transition:all .2s; margin-top: 10px; }
+.btn-cancel:hover { border-color: var(--cream); color: var(--cream); }
+
+.search-input { width: 100%; background:rgba(255,255,255,.04); border:1px solid var(--border); padding:8px 16px; font-family:var(--sans); font-size:12px; color:var(--cream); outline:none; margin-bottom: 16px; }
+
+.product-list { display: flex; flex-direction: column; gap: 12px; max-height: 700px; overflow-y: auto; padding-right: 10px; }
+.admin-card { background:rgba(0,0,0,.2); border:1px solid rgba(200,169,106,.08); padding: 12px; display: flex; gap: 12px; align-items: center; }
+.reorder-btns { display: flex; flex-direction: column; gap: 4px; }
+.reorder-btns button { background: none; border: 1px solid var(--border); color: var(--muted); cursor: pointer; padding: 2px 6px; font-size: 10px; transition: 0.2s; }
+.reorder-btns button:hover { border-color: var(--gold); color: var(--gold); }
+.admin-card-img { width: 40px; height: 60px; object-fit: contain; }
+.admin-card-info { flex: 1; }
+.admin-card-name { font-family:var(--serif); font-size:16px; color:var(--cream); margin-bottom:2px; }
+.admin-card-meta { font-family:var(--sans); font-size:10px; color:var(--muted); letter-spacing: 1px; }
+.admin-card-actions { display: flex; flex-direction: column; gap: 6px; }
+.btn-action { background:none; border:1px solid var(--border); padding:6px 12px; font-family:var(--sans); font-size:9px; letter-spacing:2px; text-transform:uppercase; color:var(--cream); cursor:pointer; transition:all .2s; }
+.btn-action:hover { border-color:var(--gold); color:var(--gold); }
+.btn-delete:hover { border-color:var(--burgundy); color:var(--burgundy); }
+
+.empty-state { text-align: center; color: var(--muted); font-style: italic; font-family: var(--serif); font-size: 16px; padding: 40px 0; }
+
+.toast { position:fixed; bottom:40px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--card-bg); border:1px solid var(--gold); padding:12px 24px; font-family:var(--sans); font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--gold); opacity:0; transition:all .3s; z-index:300; pointer-events:none; white-space:nowrap; }
+.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+.toast.error { border-color: var(--burgundy); color: #ff6b6b; }
+</style>
+</head>
+<body>
+
+<div id="loginOverlay">
+  <div class="login-box">
+    <div class="login-title">Acceso Admin</div>
+    <input type="password" id="adminPassword" class="login-input" placeholder="Contraseña">
+    <button class="login-btn" onclick="checkLogin()">Ingresar</button>
+  </div>
+</div>
+
+<header>
+  <div class="admin-title">Panel de <em>Administración</em></div>
+  <a href="index.html" class="back-link">← Volver al sitio</a>
+</header>
+
+<div class="container">
+  <!-- Formulario -->
+  <div class="panel">
+    <div class="panel-title" id="formTitle">Agregar Nuevo Vino</div>
+    <form id="wineForm">
+      <input type="hidden" id="wineId">
+      <input type="hidden" id="originalImgKey">
+      
+      <div class="form-group">
+        <label>Nombre del Vino *</label>
+        <input type="text" id="wName" required placeholder="Ej: Catena Zapata Malbec">
+      </div>
+      
+      <div class="form-group">
+        <label>Bodega / Marca *</label>
+        <input type="text" id="wBrand" required placeholder="Ej: Catena Zapata">
+      </div>
+      
+      <div class="form-group">
+        <label>Tipo *</label>
+        <select id="wType" required>
+          <option value="tinto">Tinto</option>
+          <option value="blanco">Blanco</option>
+          <option value="rosado">Rosado</option>
+          <option value="cerveza">Cerveza</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Varietal / Descripción</label>
+        <input type="text" id="wVarietal" placeholder="Ej: Malbec · Mendoza">
+      </div>
+      
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+        <div class="form-group">
+          <label>Precio Botella ($) *</label>
+          <input type="number" id="wBotPrice" required min="0" step="1" placeholder="Ej: 15000">
+        </div>
+        <div class="form-group">
+          <label>Precio Caja ($)</label>
+          <input type="number" id="wCajaPrice" min="0" step="1" placeholder="Ej: 80000">
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label>Nombre de la Imagen *</label>
+        <input type="text" id="wImgName" required placeholder="Ej: catena-zapata.png">
+        <span class="help-text">Se generará automáticamente la ruta: img/tu-imagen.png</span>
+      </div>
+      
+      <div class="form-group">
+        <label>Badge Opcional (Etiqueta roja)</label>
+        <input type="text" id="wBadge" placeholder="Ej: Nuevo, Destacado, Gran Vino">
+      </div>
+
+      <button type="submit" class="btn-submit" id="btnSave">Guardar Vino</button>
+      <button type="button" class="btn-cancel" id="btnCancel" onclick="resetForm()">Cancelar Edición</button>
+    </form>
+  </div>
+
+  <!-- Lista de Productos -->
+  <div class="panel">
+    <div class="panel-title">
+      Catálogo Completo
+      <span id="totalCount" style="font-size:10px; color:var(--muted);">0 Vinos</span>
+    </div>
+    <input type="text" id="searchInput" class="search-input" placeholder="Buscar por nombre o bodega..." onkeyup="renderAdminList()">
+    <div class="product-list" id="productList">
+      <!-- JS inserta aquí -->
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  let products = [];
+  let token = sessionStorage.getItem('admin_token') || "";
+
+  const form = document.getElementById('wineForm');
+  const formTitle = document.getElementById('formTitle');
+  const btnCancel = document.getElementById('btnCancel');
+  const btnSave = document.getElementById('btnSave');
+
+  if(token) {
+    document.getElementById('loginOverlay').style.display = 'none';
+    loadProducts();
+  }
+
+  function checkLogin() {
+    const pwd = document.getElementById('adminPassword').value;
+    if(!pwd) return;
+    token = pwd;
+    sessionStorage.setItem('admin_token', token);
+    document.getElementById('loginOverlay').style.display = 'none';
+    loadProducts();
+  }
+
+  function showToast(msg, isError = false) {
+    const t = document.getElementById("toast");
+    t.textContent = msg;
+    t.className = isError ? "toast show error" : "toast show";
+    setTimeout(() => t.className = "toast", 3000);
+  }
+
+  // Cargar desde API
+  async function loadProducts() {
+    try {
+      const res = await fetch('/.netlify/functions/admin-api');
+      if(!res.ok) throw new Error('Error fetching data');
+      products = await res.json();
+      renderAdminList();
+    } catch(e) {
+      console.error(e);
+      showToast("Error de conexión con Netlify", true);
+    }
+  }
+
+  // Guardar en API
+  async function saveProductsToServer() {
+    btnSave.disabled = true;
+    btnSave.textContent = 'Guardando...';
+    try {
+      const res = await fetch('/.netlify/functions/admin-api', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ products })
+      });
+      
+      if(!res.ok) {
+        if(res.status === 401) {
+          sessionStorage.removeItem('admin_token');
+          document.getElementById('loginOverlay').style.display = 'flex';
+          throw new Error('Contraseña incorrecta');
+        }
+        throw new Error('Error al guardar');
+      }
+      
+      showToast("¡Catálogo actualizado correctamente!");
+      renderAdminList();
+      resetForm();
+    } catch(e) {
+      console.error(e);
+      showToast(e.message, true);
+    } finally {
+      btnSave.disabled = false;
+      btnSave.textContent = 'Guardar Vino';
+    }
+  }
+
+  function renderAdminList() {
+    const listEl = document.getElementById('productList');
+    const searchVal = document.getElementById('searchInput').value.toLowerCase();
+    
+    document.getElementById('totalCount').textContent = products.length + " Vinos";
+
+    let filtered = products;
+    if(searchVal) {
+      filtered = products.filter(p => p.name.toLowerCase().includes(searchVal) || p.brand.toLowerCase().includes(searchVal));
+    }
+
+    if (filtered.length === 0) {
+      listEl.innerHTML = '<div class="empty-state">No se encontraron vinos.</div>';
+      return;
+    }
+
+    listEl.innerHTML = filtered.map((p, index) => {
+      // Determinar imagen para previsualizar
+      let imgPath = p.customImg || (p.imgKey ? `img/${p.imgKey}.png` : "");
+      
+      // Encontrar índice real en el array original para poder reordenar
+      const realIndex = products.findIndex(x => x.id === p.id);
+
+      return `
+      <div class="admin-card">
+        <div class="reorder-btns">
+          <button onclick="moveProduct(${realIndex}, -1)" ${realIndex === 0 ? 'disabled' : ''}>▲</button>
+          <button onclick="moveProduct(${realIndex}, 1)" ${realIndex === products.length - 1 ? 'disabled' : ''}>▼</button>
+        </div>
+        <img class="admin-card-img" src="${imgPath}" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\'/>'">
+        <div class="admin-card-info">
+          <div class="admin-card-name">${p.name}</div>
+          <div class="admin-card-meta">${p.brand} · $${p.botPrice} · ${p.type}</div>
+        </div>
+        <div class="admin-card-actions">
+          <button class="btn-action" onclick="editProduct(${p.id})">Editar</button>
+          <button class="btn-action btn-delete" onclick="deleteProduct(${p.id})">Borrar</button>
+        </div>
+      </div>
+    `}).join('');
+  }
+
+  function moveProduct(index, direction) {
+    if (index + direction < 0 || index + direction >= products.length) return;
+    const temp = products[index];
+    products[index] = products[index + direction];
+    products[index + direction] = temp;
+    saveProductsToServer();
+  }
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const idField = document.getElementById('wineId').value;
+    const isEdit = !!idField;
+    
+    let rawImg = document.getElementById('wImgName').value.trim();
+    if (rawImg && !rawImg.startsWith('img/')) {
+      rawImg = 'img/' + rawImg;
+    }
+
+    const newProduct = {
+      id: isEdit ? parseInt(idField) : Date.now(),
+      name: document.getElementById('wName').value.trim(),
+      brand: document.getElementById('wBrand').value.trim(),
+      type: document.getElementById('wType').value,
+      varietal: document.getElementById('wVarietal').value.trim(),
+      botPrice: parseFloat(document.getElementById('wBotPrice').value) || 0,
+      cajaPrice: parseFloat(document.getElementById('wCajaPrice').value) || 0,
+      customImg: rawImg,
+      badge: document.getElementById('wBadge').value.trim(),
+      // Preservar la key original si es que editamos un vino que venía del hardcode inicial
+      imgKey: document.getElementById('originalImgKey').value || ""
+    };
+
+    if (isEdit) {
+      const index = products.findIndex(p => p.id === parseInt(idField));
+      if (index !== -1) {
+        // Mantener propiedades extras que pudieran existir (como imgScale)
+        products[index] = { ...products[index], ...newProduct };
+      }
+    } else {
+      // Agregar al principio o final? El usuario dijo "reordenar", así que agregamos arriba.
+      products.unshift(newProduct);
+    }
+
+    saveProductsToServer();
+  });
+
+  function editProduct(id) {
+    const p = products.find(x => x.id === id);
+    if (!p) return;
+
+    document.getElementById('wineId').value = p.id;
+    document.getElementById('wName').value = p.name;
+    document.getElementById('wBrand').value = p.brand;
+    document.getElementById('wType').value = p.type;
+    document.getElementById('wVarietal').value = p.varietal || "";
+    document.getElementById('wBotPrice').value = p.botPrice;
+    document.getElementById('wCajaPrice').value = p.cajaPrice || "";
+    document.getElementById('originalImgKey').value = p.imgKey || "";
+    
+    let imgVal = p.customImg || (p.imgKey ? `${p.imgKey}.png` : "");
+    if (imgVal.startsWith('img/')) imgVal = imgVal.replace('img/', '');
+    document.getElementById('wImgName').value = imgVal;
+    
+    document.getElementById('wBadge').value = p.badge || "";
+
+    formTitle.innerHTML = 'Editar Vino <em>' + p.name + '</em>';
+    btnSave.textContent = 'Actualizar Vino';
+    btnCancel.style.display = 'inline-block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function deleteProduct(id) {
+    if (confirm('¿Estás seguro de que querés borrar este vino permanentemente?')) {
+      products = products.filter(p => p.id !== id);
+      saveProductsToServer();
+      if(document.getElementById('wineId').value == id) resetForm();
+    }
+  }
+
+  function resetForm() {
+    form.reset();
+    document.getElementById('wineId').value = '';
+    document.getElementById('originalImgKey').value = '';
+    formTitle.textContent = 'Agregar Nuevo Vino';
+    btnSave.textContent = 'Guardar Vino';
+    btnCancel.style.display = 'none';
+  }
+</script>
+</body>
+</html>
