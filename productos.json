@@ -41,7 +41,7 @@
   {"id":40, "name":"Rutini Encuentro Chardonnay", "brand":"Rutini", "type":"blanco", "varietal":"Chardonnay", "cajaPrice":68400, "botPrice":11400, "vintage":"", "badge":"Nuevo", "imgKey":"rutini_chardonnay", "imgScale":1.18},
   {"id":42, "name":"Trumpeter Malbec Syrah", "brand":"Trumpeter", "type":"tinto", "varietal":"Blend", "cajaPrice":44400, "botPrice":7400, "vintage":"", "badge":"Nuevo", "imgKey":"trumpeter_malbec_syrah", "imgScale":1.18},
   {"id":43, "name":"Heineken Pack x6", "brand":"Heineken", "type":"cerveza", "varietal":"473cc", "cajaPrice":21240, "botPrice":3540, "vintage":"", "badge":"Nuevo", "imgKey":"heineken6", "imgScale":1.18},
-  {"id":"28-9223", "name":"Catena Zapata Malbec Argentino 2023", "brand":"Catena Zapata", "type":"tinto", "varietal":"", "cajaPrice":353400, "botPrice":58900, "vintage":"2023", "badge":"", "customImg":"img/malbecargentino.png"},
+  {"id":"28-9223", "name":"Catena Zapata Malbec Argentino 2023", "brand":"Catena Zapata", "type":"tinto", "varietal":"", "cajaPrice":353400, "botPrice":58900, "vintage":"2023", "badge":"", "customImg":"img/malbecargentino.jpg"},
   {"id":"2972-21", "name":"Catena Zapata Birth of Cabernet Sauv. 2021", "brand":"Catena Zapata", "type":"tinto", "varietal":"", "cajaPrice":353400, "botPrice":58900, "vintage":"2021", "badge":"", "customImg":"img/catenazapatabirthofcabernet.png"},
   {"id":"2200-24", "name":"DV Catena Malbec/Malbec", "brand":"DV Catena", "type":"tinto", "varietal":"", "cajaPrice":96600, "botPrice":16100, "vintage":"", "badge":"", "customImg":"img/dvcatenamalbecmalbec.png"}
 ]
