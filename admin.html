@@ -29,6 +29,8 @@ header { border-bottom:1px solid var(--border); padding-bottom: 20px; margin-bot
 .login-input { width: 100%; background:rgba(255,255,255,.04); border:1px solid var(--border); padding:12px; font-family:var(--sans); font-size:16px; color:var(--cream); outline:none; text-align: center; letter-spacing: 4px; margin-bottom: 20px; }
 .login-btn { width: 100%; background:var(--gold); border:none; padding:12px; font-family:var(--sans); font-size:12px; font-weight:500; letter-spacing:3px; text-transform:uppercase; color:var(--black); cursor:pointer; }
 
+.warning-box { background: rgba(200,169,106,0.1); border: 1px solid var(--gold); color: var(--gold-light); padding: 12px; font-size: 13px; text-align: center; margin-bottom: 24px; font-family: var(--sans); }
+
 .container { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
 @media (max-width: 800px) { .container { grid-template-columns: 1fr; } }
 
@@ -87,6 +89,10 @@ header { border-bottom:1px solid var(--border); padding-bottom: 20px; margin-bot
   <a href="index.html" class="back-link">← Volver al sitio</a>
 </header>
 
+<div class="warning-box">
+  ⚠️ IMPORTANTE: Al guardar, los cambios pueden tardar entre 40 y 60 segundos en verse reflejados mientras Netlify reconstruye el sitio.
+</div>
+
 <div class="container">
   <!-- Formulario -->
   <div class="panel">
@@ -95,6 +101,12 @@ header { border-bottom:1px solid var(--border); padding-bottom: 20px; margin-bot
       <input type="hidden" id="wineId">
       <input type="hidden" id="originalImgKey">
       
+      <div class="form-group">
+        <label>Código Interno Único (Obligatorio) *</label>
+        <input type="text" id="wIdField" required placeholder="Ej: 28-9223">
+        <span class="help-text">Código único de inventario. No se puede repetir.</span>
+      </div>
+
       <div class="form-group">
         <label>Nombre del Vino *</label>
         <input type="text" id="wName" required placeholder="Ej: Catena Zapata Malbec">
@@ -123,7 +135,7 @@ header { border-bottom:1px solid var(--border); padding-bottom: 20px; margin-bot
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
         <div class="form-group">
           <label>Precio Botella ($) *</label>
-          <input type="number" id="wBotPrice" required min="0" step="1" placeholder="Ej: 15000">
+          <input type="number" id="wBotPrice" required min="1" step="1" placeholder="Ej: 15000">
         </div>
         <div class="form-group">
           <label>Precio Caja ($)</label>
@@ -142,7 +154,7 @@ header { border-bottom:1px solid var(--border); padding-bottom: 20px; margin-bot
         <input type="text" id="wBadge" placeholder="Ej: Nuevo, Destacado, Gran Vino">
       </div>
 
-      <button type="submit" class="btn-submit" id="btnSave">Guardar Vino</button>
+      <button type="button" class="btn-submit" id="btnSave" onclick="handleSave()">Guardar Vino</button>
       <button type="button" class="btn-cancel" id="btnCancel" onclick="resetForm()">Cancelar Edición</button>
     </form>
   </div>
@@ -153,7 +165,7 @@ header { border-bottom:1px solid var(--border); padding-bottom: 20px; margin-bot
       Catálogo Completo
       <span id="totalCount" style="font-size:10px; color:var(--muted);">0 Vinos</span>
     </div>
-    <input type="text" id="searchInput" class="search-input" placeholder="Buscar por nombre o bodega..." onkeyup="renderAdminList()">
+    <input type="text" id="searchInput" class="search-input" placeholder="Buscar por nombre o código..." onkeyup="renderAdminList()">
     <div class="product-list" id="productList">
       <!-- JS inserta aquí -->
     </div>
@@ -189,23 +201,30 @@ header { border-bottom:1px solid var(--border); padding-bottom: 20px; margin-bot
     const t = document.getElementById("toast");
     t.textContent = msg;
     t.className = isError ? "toast show error" : "toast show";
-    setTimeout(() => t.className = "toast", 3000);
+    setTimeout(() => t.className = "toast", 4000);
   }
 
-  // Cargar desde API
+  // Cargar desde JSON
   async function loadProducts() {
     try {
-      const res = await fetch('/.netlify/functions/admin-api');
-      if(!res.ok) throw new Error('Error fetching data');
+      // Usamos timestamp para evitar caché al leer en el admin
+      const res = await fetch('/productos.json?t=' + Date.now());
+      if(!res.ok) {
+        if (res.status === 404) {
+          showToast("Archivo productos.json no encontrado en el servidor.", true);
+        } else {
+          throw new Error('Error fetching data');
+        }
+      }
       products = await res.json();
       renderAdminList();
     } catch(e) {
       console.error(e);
-      showToast("Error de conexión con Netlify", true);
+      showToast("Error de conexión al cargar productos.", true);
     }
   }
 
-  // Guardar en API
+  // Guardar a GitHub via Netlify Function
   async function saveProductsToServer() {
     btnSave.disabled = true;
     btnSave.textContent = 'Guardando...';
@@ -225,10 +244,11 @@ header { border-bottom:1px solid var(--border); padding-bottom: 20px; margin-bot
           document.getElementById('loginOverlay').style.display = 'flex';
           throw new Error('Contraseña incorrecta');
         }
-        throw new Error('Error al guardar');
+        const errInfo = await res.json();
+        throw new Error(errInfo.error || 'Error al guardar');
       }
       
-      showToast("¡Catálogo actualizado correctamente!");
+      showToast("¡Guardado! Tu web se reconstruirá en ~40-60 segs.");
       renderAdminList();
       resetForm();
     } catch(e) {
@@ -248,7 +268,10 @@ header { border-bottom:1px solid var(--border); padding-bottom: 20px; margin-bot
 
     let filtered = products;
     if(searchVal) {
-      filtered = products.filter(p => p.name.toLowerCase().includes(searchVal) || p.brand.toLowerCase().includes(searchVal));
+      filtered = products.filter(p => 
+        p.name.toLowerCase().includes(searchVal) || 
+        String(p.id).toLowerCase().includes(searchVal)
+      );
     }
 
     if (filtered.length === 0) {
@@ -257,11 +280,8 @@ header { border-bottom:1px solid var(--border); padding-bottom: 20px; margin-bot
     }
 
     listEl.innerHTML = filtered.map((p, index) => {
-      // Determinar imagen para previsualizar
       let imgPath = p.customImg || (p.imgKey ? `img/${p.imgKey}.png` : "");
-      
-      // Encontrar índice real en el array original para poder reordenar
-      const realIndex = products.findIndex(x => x.id === p.id);
+      const realIndex = products.findIndex(x => String(x.id) === String(p.id));
 
       return `
       <div class="admin-card">
@@ -275,8 +295,8 @@ header { border-bottom:1px solid var(--border); padding-bottom: 20px; margin-bot
           <div class="admin-card-meta">${p.brand} · $${p.botPrice} · ${p.type}</div>
         </div>
         <div class="admin-card-actions">
-          <button class="btn-action" onclick="editProduct(${p.id})">Editar</button>
-          <button class="btn-action btn-delete" onclick="deleteProduct(${p.id})">Borrar</button>
+          <button class="btn-action" onclick="editProduct('${p.id}')">Editar</button>
+          <button class="btn-action btn-delete" onclick="deleteProduct('${p.id}')">Borrar</button>
         </div>
       </div>
     `}).join('');
@@ -290,49 +310,82 @@ header { border-bottom:1px solid var(--border); padding-bottom: 20px; margin-bot
     saveProductsToServer();
   }
 
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const idField = document.getElementById('wineId').value;
-    const isEdit = !!idField;
+  async function checkImageExists(url) {
+    try {
+      const response = await fetch(url, { method: 'HEAD' });
+      return response.ok;
+    } catch (e) {
+      // Si falla por CORS o red, asumimos false para advertir al menos
+      return false; 
+    }
+  }
+
+  async function handleSave() {
+    // Validaciones
+    const isEdit = !!document.getElementById('wineId').value;
+    const currentId = document.getElementById('wIdField').value.trim();
+    const name = document.getElementById('wName').value.trim();
+    const botPrice = parseFloat(document.getElementById('wBotPrice').value);
+    const wImgName = document.getElementById('wImgName').value.trim();
     
-    let rawImg = document.getElementById('wImgName').value.trim();
+    if (!currentId || !name || isNaN(botPrice) || botPrice <= 0 || !wImgName) {
+      showToast("Completa los campos obligatorios (*).", true);
+      return;
+    }
+
+    // Validar ID único si es creación o si cambió de ID
+    const oldId = document.getElementById('wineId').value;
+    if (!isEdit || oldId !== currentId) {
+      if (products.some(p => String(p.id) === currentId)) {
+        showToast("Error: El Código Interno ya existe en otro producto.", true);
+        return;
+      }
+    }
+
+    // Generar ruta de imagen
+    let rawImg = wImgName;
     if (rawImg && !rawImg.startsWith('img/')) {
       rawImg = 'img/' + rawImg;
     }
 
+    // Validar si la imagen existe
+    const imgExists = await checkImageExists('/' + rawImg);
+    if (!imgExists) {
+      const confirmImg = confirm(`ATENCIÓN: El archivo de imagen '${rawImg}' no parece existir en el servidor.\n\nSi acabas de subir la imagen o vas a subirla pronto, puedes ignorar este mensaje.\n\n¿Deseas guardar de todos modos?`);
+      if(!confirmImg) return;
+    }
+
     const newProduct = {
-      id: isEdit ? parseInt(idField) : Date.now(),
-      name: document.getElementById('wName').value.trim(),
+      id: currentId,
+      name: name,
       brand: document.getElementById('wBrand').value.trim(),
       type: document.getElementById('wType').value,
       varietal: document.getElementById('wVarietal').value.trim(),
-      botPrice: parseFloat(document.getElementById('wBotPrice').value) || 0,
+      botPrice: botPrice,
       cajaPrice: parseFloat(document.getElementById('wCajaPrice').value) || 0,
       customImg: rawImg,
       badge: document.getElementById('wBadge').value.trim(),
-      // Preservar la key original si es que editamos un vino que venía del hardcode inicial
       imgKey: document.getElementById('originalImgKey').value || ""
     };
 
     if (isEdit) {
-      const index = products.findIndex(p => p.id === parseInt(idField));
+      const index = products.findIndex(p => String(p.id) === oldId);
       if (index !== -1) {
-        // Mantener propiedades extras que pudieran existir (como imgScale)
         products[index] = { ...products[index], ...newProduct };
       }
     } else {
-      // Agregar al principio o final? El usuario dijo "reordenar", así que agregamos arriba.
       products.unshift(newProduct);
     }
 
     saveProductsToServer();
-  });
+  }
 
   function editProduct(id) {
-    const p = products.find(x => x.id === id);
+    const p = products.find(x => String(x.id) === String(id));
     if (!p) return;
 
-    document.getElementById('wineId').value = p.id;
+    document.getElementById('wineId').value = p.id; // Old ID para buscarlo
+    document.getElementById('wIdField').value = p.id;
     document.getElementById('wName').value = p.name;
     document.getElementById('wBrand').value = p.brand;
     document.getElementById('wType').value = p.type;
@@ -355,7 +408,7 @@ header { border-bottom:1px solid var(--border); padding-bottom: 20px; margin-bot
 
   function deleteProduct(id) {
     if (confirm('¿Estás seguro de que querés borrar este vino permanentemente?')) {
-      products = products.filter(p => p.id !== id);
+      products = products.filter(p => String(p.id) !== String(id));
       saveProductsToServer();
       if(document.getElementById('wineId').value == id) resetForm();
     }
@@ -364,6 +417,7 @@ header { border-bottom:1px solid var(--border); padding-bottom: 20px; margin-bot
   function resetForm() {
     form.reset();
     document.getElementById('wineId').value = '';
+    document.getElementById('wIdField').value = '';
     document.getElementById('originalImgKey').value = '';
     formTitle.textContent = 'Agregar Nuevo Vino';
     btnSave.textContent = 'Guardar Vino';

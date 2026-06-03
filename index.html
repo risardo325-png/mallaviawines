@@ -469,7 +469,7 @@ function renderProducts(list){
       <div class="product-pricing">
         ${cajaHtml}
         <div class="price-group"><div class="price-label">Botella</div><div class="price-val">${fmt(p.botPrice)}</div></div>
-        <button class="add-btn ${inCart?"added":""}" id="btn-${p.id}" onclick="addToCart(${p.id})">${inCart?"✓ Listo":"+ Agregar"}</button>
+        <button class="add-btn ${inCart?"added":""}" id="btn-${p.id}" onclick="addToCart('${p.id}')">${inCart?"✓ Listo":"+ Agregar"}</button>
       </div>
     </div>`;
   });
@@ -498,9 +498,9 @@ function sortCatalog(val){
 }
 
 function addToCart(id){
-  const p=products.find(x=>x.id===id);
+  const p=products.find(x=>String(x.id) === String(id));
   if(!p) return;
-  if(cart[id]) cart[id].qty++; else cart[id]={product:p,qty:1};
+  if(cart[String(id)]) cart[String(id)].qty++; else cart[String(id)]={product:p,qty:1};
   updateCartUI();
   updateCardBadge(id);
   showToast(p.name+" agregado");
@@ -508,10 +508,10 @@ function addToCart(id){
   if(btn){btn.textContent="✓ Listo";btn.classList.add("added");}
 }
 function changeQty(id,delta){
-  if(!cart[id]) return;
-  cart[id].qty+=delta;
-  if(cart[id].qty<=0){
-    delete cart[id];
+  if(!cart[String(id)]) return;
+  cart[String(id)].qty+=delta;
+  if(cart[String(id)].qty<=0){
+    delete cart[String(id)];
     const btn=document.getElementById("btn-"+id);
     if(btn){btn.textContent="+ Agregar";btn.classList.remove("added");}
   }
@@ -519,7 +519,7 @@ function changeQty(id,delta){
   updateCardBadge(id);
 }
 function removeFromCart(id){
-  delete cart[id];
+  delete cart[String(id)];
   const btn=document.getElementById("btn-"+id);
   if(btn){btn.textContent="+ Agregar";btn.classList.remove("added");}
   updateCartUI();
@@ -528,7 +528,7 @@ function removeFromCart(id){
 function updateCardBadge(id){
   const el=document.getElementById("qbadge-"+id);
   if(!el) return;
-  const qty=cart[id]?cart[id].qty:0;
+  const qty=cart[String(id)]?cart[String(id)].qty:0;
   el.textContent=qty;
   el.classList.toggle("visible", qty>0);
 }
@@ -558,9 +558,9 @@ function updateCartUI(){
         <div class="cart-item-type">${c.product.brand}</div>
         <div class="cart-item-price">${fmt(c.product.botPrice)} c/u · Total: ${fmt(cartLineTotal(c))}</div>
         <div class="cart-item-controls">
-          <button class="qty-btn" onclick="changeQty(${c.product.id},-1)">−</button>
+          <button class="qty-btn" onclick="changeQty('${c.product.id}', -1)">−</button>
           <span class="qty-num">${c.qty}</span>
-          <button class="qty-btn" onclick="changeQty(${c.product.id},1)">+</button>
+          <button class="qty-btn" onclick="changeQty('${c.product.id}', 1)">+</button>
           <button class="remove-btn" onclick="removeFromCart(${c.product.id})">Eliminar ✕</button>
         </div>
       </div>
@@ -625,8 +625,11 @@ function showToast(msg){
 }
 
 let products = [];
-fetch('/.netlify/functions/admin-api')
-  .then(res => res.json())
+fetch('productos.json?t=' + Date.now())
+  .then(res => {
+    if(!res.ok) throw new Error('Network error');
+    return res.json();
+  })
   .then(data => {
     products = data;
     renderProducts(products);
@@ -636,9 +639,11 @@ fetch('/.netlify/functions/admin-api')
     if(typeof local_products_backup !== 'undefined') {
       products = local_products_backup;
       renderProducts(products);
+    } else {
+      document.getElementById('productGrid').innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:#C8A96A;">El cat�logo se est� actualizando. Por favor, refresca la p�gina en unos segundos.</div>';
     }
-  });
-</script>
+  });</script>
 </body>
 </html>
+
 
