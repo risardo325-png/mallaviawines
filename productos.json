@@ -12,7 +12,7 @@
   {"id":11, "name":"Rutini Dominio Malbec", "brand":"Rutini", "type":"tinto", "varietal":"Malbec · Uco Valley", "cajaPrice":125880, "botPrice":20980, "vintage":"2022", "badge":"Destacado", "imgKey":"rutini_dominio"},
   {"id":12, "name":"Rutini Encuentro Cabernet Sauvignon", "brand":"Rutini", "type":"tinto", "varietal":"Cabernet Sauvignon · Mendoza", "cajaPrice":68400, "botPrice":11400, "vintage":"", "badge":"", "imgKey":"rutini_enc_cabsauv"},
   {"id":13, "name":"Rutini Encuentro Malbec", "brand":"Rutini", "type":"tinto", "varietal":"Malbec · Mendoza", "cajaPrice":68400, "botPrice":11400, "vintage":"", "badge":"", "imgKey":"rutini_enc_malbec"},
-{"id":14, "name":"Saint Felicien Cabernet Franc", "brand":"Saint Felicien", "type":"tinto", "varietal":"Cabernet Franc · Familia Catena", "cajaPrice":54900, "botPrice":9150, "vintage":"", "badge":"", "imgKey":"sf_cabfranc"}
+  {"id":14, "name":"Saint Felicien Cabernet Franc", "brand":"Saint Felicien", "type":"tinto", "varietal":"Cabernet Franc · Familia Catena", "cajaPrice":54900, "botPrice":9150, "vintage":"", "badge":"", "imgKey":"sf_cabfranc"},
   {"id":15, "name":"Saint Felicien Malbec", "brand":"Saint Felicien", "type":"tinto", "varietal":"Malbec · Familia Catena", "cajaPrice":54900, "botPrice":9150, "vintage":"", "badge":"", "imgKey":"sf_malbec"},
   {"id":16, "name":"Saint Felicien Pinot Noir", "brand":"Saint Felicien", "type":"tinto", "varietal":"Pinot Noir · Familia Catena", "cajaPrice":54900, "botPrice":9150, "vintage":"", "badge":"", "imgKey":"sf_pinotnoir"},
   {"id":17, "name":"San Felipe 12 Uvas", "brand":"San Felipe", "type":"tinto", "varietal":"12 Uvas · Maipú, Mendoza", "cajaPrice":28200, "botPrice":4700, "vintage":"", "badge":"", "imgKey":"sanfelipe_12uvas"},
