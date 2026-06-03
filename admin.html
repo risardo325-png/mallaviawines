@@ -99,7 +99,6 @@ header { border-bottom:1px solid var(--border); padding-bottom: 20px; margin-bot
     <div class="panel-title" id="formTitle">Agregar Nuevo Vino</div>
     <form id="wineForm">
       <input type="hidden" id="wineId">
-      <input type="hidden" id="originalImgKey">
       
       <div class="form-group">
         <label>Código Interno Único (Obligatorio) *</label>
@@ -143,10 +142,17 @@ header { border-bottom:1px solid var(--border); padding-bottom: 20px; margin-bot
         </div>
       </div>
       
-      <div class="form-group">
-        <label>Nombre de la Imagen *</label>
-        <input type="text" id="wImgName" required placeholder="Ej: catena-zapata.png">
-        <span class="help-text">Se generará automáticamente la ruta: img/tu-imagen.png</span>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+        <div class="form-group">
+          <label>imgKey (Nombre sin extensión)</label>
+          <input type="text" id="wImgKey" placeholder="Ej: alamos">
+          <span class="help-text">Se buscará en img/nombre.png</span>
+        </div>
+        <div class="form-group">
+          <label>customImg (Ruta con extensión)</label>
+          <input type="text" id="wCustomImg" placeholder="Ej: img/alamos.jpg">
+          <span class="help-text">Prioridad sobre imgKey si se especifica.</span>
+        </div>
       </div>
       
       <div class="form-group">
@@ -215,8 +221,39 @@ header { border-bottom:1px solid var(--border); padding-bottom: 20px; margin-bot
         } else {
           throw new Error('Error fetching data');
         }
+        return;
       }
-      products = await res.json();
+      const text = await res.text();
+      try {
+        products = JSON.parse(text);
+      } catch (parseError) {
+        console.error("JSON Error:", parseError);
+        let errorMsg = parseError.message;
+        
+        // Intentar deducir la línea del error
+        let errorDetalle = errorMsg;
+        let matchPos = errorMsg.match(/position\s+(\d+)/i);
+        if (matchPos) {
+           let pos = parseInt(matchPos[1]);
+           let lineNum = text.slice(0, pos).split('\n').length;
+           errorDetalle += ` (Cerca de la línea ${lineNum})`;
+        } else {
+           let matchLine = errorMsg.match(/line\s+(\d+)/i);
+           if (matchLine) {
+             errorDetalle += ` (Línea ${matchLine[1]})`;
+           }
+        }
+        
+        let errorMsgHTML = `Error crítico en productos.json:<br><strong>${errorDetalle}</strong><br><br>El JSON es inválido. Por favor, corrige las comillas, comas o llaves en el archivo para evitar pérdida de datos. Guardar cambios ha sido deshabilitado.`;
+        
+        document.getElementById('productList').innerHTML = `<div class="empty-state" style="color:#ff6b6b; font-family:var(--sans); font-size:14px; border:1px solid #ff6b6b; padding:20px; text-align:left;">${errorMsgHTML}</div>`;
+        document.getElementById('btnSave').disabled = true;
+        document.getElementById('btnSave').textContent = 'JSON INVÁLIDO (BLOQUEADO)';
+        document.getElementById('btnSave').style.background = '#333';
+        document.getElementById('btnSave').style.color = '#ff6b6b';
+        showToast("Error de sintaxis en el JSON.", true);
+        return;
+      }
       renderAdminList();
     } catch(e) {
       console.error(e);
@@ -326,10 +363,11 @@ header { border-bottom:1px solid var(--border); padding-bottom: 20px; margin-bot
     const currentId = document.getElementById('wIdField').value.trim();
     const name = document.getElementById('wName').value.trim();
     const botPrice = parseFloat(document.getElementById('wBotPrice').value);
-    const wImgName = document.getElementById('wImgName').value.trim();
+    const wImgKey = document.getElementById('wImgKey').value.trim();
+    const wCustomImg = document.getElementById('wCustomImg').value.trim();
     
-    if (!currentId || !name || isNaN(botPrice) || botPrice <= 0 || !wImgName) {
-      showToast("Completa los campos obligatorios (*).", true);
+    if (!currentId || !name || isNaN(botPrice) || botPrice <= 0 || (!wImgKey && !wCustomImg)) {
+      showToast("Completa los campos obligatorios (*) y al menos una imagen.", true);
       return;
     }
 
@@ -342,16 +380,20 @@ header { border-bottom:1px solid var(--border); padding-bottom: 20px; margin-bot
       }
     }
 
-    // Generar ruta de imagen
-    let rawImg = wImgName;
-    if (rawImg && !rawImg.startsWith('img/')) {
-      rawImg = 'img/' + rawImg;
+    // Validar si la imagen existe
+    let imgToCheck = "";
+    if (wCustomImg) {
+      imgToCheck = wCustomImg;
+      if (!imgToCheck.startsWith('img/')) {
+        imgToCheck = 'img/' + imgToCheck; // normalize
+      }
+    } else if (wImgKey) {
+      imgToCheck = 'img/' + wImgKey + '.png';
     }
 
-    // Validar si la imagen existe
-    const imgExists = await checkImageExists('/' + rawImg);
+    const imgExists = await checkImageExists('/' + imgToCheck);
     if (!imgExists) {
-      const confirmImg = confirm(`ATENCIÓN: El archivo de imagen '${rawImg}' no parece existir en el servidor.\n\nSi acabas de subir la imagen o vas a subirla pronto, puedes ignorar este mensaje.\n\n¿Deseas guardar de todos modos?`);
+      const confirmImg = confirm(`ATENCIÓN: El archivo de imagen '${imgToCheck}' no parece existir en el servidor.\n\nSi acabas de subir la imagen o vas a subirla pronto, puedes ignorar este mensaje.\n\n¿Deseas guardar de todos modos?`);
       if(!confirmImg) return;
     }
 
@@ -363,17 +405,31 @@ header { border-bottom:1px solid var(--border); padding-bottom: 20px; margin-bot
       varietal: document.getElementById('wVarietal').value.trim(),
       botPrice: botPrice,
       cajaPrice: parseFloat(document.getElementById('wCajaPrice').value) || 0,
-      customImg: rawImg,
-      badge: document.getElementById('wBadge').value.trim(),
-      imgKey: document.getElementById('originalImgKey').value || ""
+      badge: document.getElementById('wBadge').value.trim()
     };
 
     if (isEdit) {
       const index = products.findIndex(p => String(p.id) === oldId);
       if (index !== -1) {
-        products[index] = { ...products[index], ...newProduct };
+        const merged = { ...products[index], ...newProduct };
+        
+        if (wCustomImg) {
+            merged.customImg = wCustomImg.startsWith('img/') ? wCustomImg : 'img/' + wCustomImg;
+        } else {
+            delete merged.customImg;
+        }
+        
+        if (wImgKey) {
+            merged.imgKey = wImgKey;
+        } else {
+            delete merged.imgKey;
+        }
+        
+        products[index] = merged;
       }
     } else {
+      if (wCustomImg) newProduct.customImg = wCustomImg.startsWith('img/') ? wCustomImg : 'img/' + wCustomImg;
+      if (wImgKey) newProduct.imgKey = wImgKey;
       products.unshift(newProduct);
     }
 
@@ -392,11 +448,9 @@ header { border-bottom:1px solid var(--border); padding-bottom: 20px; margin-bot
     document.getElementById('wVarietal').value = p.varietal || "";
     document.getElementById('wBotPrice').value = p.botPrice;
     document.getElementById('wCajaPrice').value = p.cajaPrice || "";
-    document.getElementById('originalImgKey').value = p.imgKey || "";
     
-    let imgVal = p.customImg || (p.imgKey ? `${p.imgKey}.png` : "");
-    if (imgVal.startsWith('img/')) imgVal = imgVal.replace('img/', '');
-    document.getElementById('wImgName').value = imgVal;
+    document.getElementById('wImgKey').value = p.imgKey || "";
+    document.getElementById('wCustomImg').value = p.customImg || "";
     
     document.getElementById('wBadge').value = p.badge || "";
 
@@ -418,7 +472,6 @@ header { border-bottom:1px solid var(--border); padding-bottom: 20px; margin-bot
     form.reset();
     document.getElementById('wineId').value = '';
     document.getElementById('wIdField').value = '';
-    document.getElementById('originalImgKey').value = '';
     formTitle.textContent = 'Agregar Nuevo Vino';
     btnSave.textContent = 'Guardar Vino';
     btnCancel.style.display = 'none';
