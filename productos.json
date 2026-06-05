@@ -230,13 +230,13 @@
     "imgKey": "trumpeter_cabsauv"
   },
   {
-    "id": 20,
+    "id": "20",
     "name": "Trumpeter Cabernet/Franc",
     "brand": "Trumpeter",
     "type": "tinto",
     "varietal": "Cabernet Franc · Rutini Wines",
-    "cajaPrice": 44400,
-    "botPrice": 7400,
+    "cajaPrice": 45600,
+    "botPrice": 7600,
     "vintage": "",
     "badge": "",
     "imgKey": "trumpeter_cabfranc"
