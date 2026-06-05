@@ -254,13 +254,13 @@
     "imgKey": "trumpeter_malbec"
   },
   {
-    "id": 22,
+    "id": "22",
     "name": "Trumpeter Syrah",
     "brand": "Trumpeter",
     "type": "tinto",
     "varietal": "Syrah · Rutini Wines",
-    "cajaPrice": 44400,
-    "botPrice": 7400,
+    "cajaPrice": 45600,
+    "botPrice": 7600,
     "vintage": "",
     "badge": "",
     "imgKey": "trumpeter_syrah"
