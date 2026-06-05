@@ -492,13 +492,13 @@
     "imgScale": 1.18
   },
   {
-    "id": 42,
+    "id": "42",
     "name": "Trumpeter Malbec Syrah",
     "brand": "Trumpeter",
     "type": "tinto",
     "varietal": "Blend",
-    "cajaPrice": 44400,
-    "botPrice": 7400,
+    "cajaPrice": 45600,
+    "botPrice": 7600,
     "vintage": "",
     "badge": "Nuevo",
     "imgKey": "trumpeter_malbec_syrah",
