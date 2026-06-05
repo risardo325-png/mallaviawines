@@ -266,13 +266,13 @@
     "imgKey": "trumpeter_syrah"
   },
   {
-    "id": 30,
+    "id": "30",
     "name": "Trumpeter Merlot",
     "brand": "Trumpeter",
     "type": "tinto",
     "varietal": "Merlot · Rutini Wines",
-    "cajaPrice": 44400,
-    "botPrice": 7400,
+    "cajaPrice": 45600,
+    "botPrice": 7600,
     "vintage": "",
     "badge": "",
     "imgKey": "trumpeter_merlot"
