@@ -314,13 +314,13 @@
     "imgKey": "sanfelipe_blanco"
   },
   {
-    "id": 26,
+    "id": "26",
     "name": "Trumpeter Sauvignon Blanc",
     "brand": "Trumpeter",
     "type": "blanco",
     "varietal": "Sauvignon Blanc · Rutini Wines",
-    "cajaPrice": 44400,
-    "botPrice": 7400,
+    "cajaPrice": 45600,
+    "botPrice": 7600,
     "vintage": "",
     "badge": "",
     "imgKey": "trumpeter_saublanc"
