@@ -428,13 +428,13 @@
     "imgScale": 0.9
   },
   {
-    "id": 29,
+    "id": "29",
     "name": "Cerveza Corona Cero 330ml",
     "brand": "Corona",
     "type": "cerveza",
     "varietal": "Sin Alcohol 0.0% · Pack x4 botellas",
-    "cajaPrice": 8560,
-    "botPrice": 2140,
+    "cajaPrice": 9000,
+    "botPrice": 2250,
     "vintage": "",
     "badge": "Sin Alcohol",
     "imgKey": "coronacero"
