@@ -363,13 +363,13 @@
     "imgScale": 0.9
   },
   {
-    "id": 32,
+    "id": "32",
     "name": "Angelica Zapata Cabernet Sauv. 2020",
     "brand": "Angelica Zapata",
     "type": "tinto",
     "varietal": "Cabernet Sauvignon Alta · x4 botellas",
-    "cajaPrice": 85000,
-    "botPrice": 21250,
+    "cajaPrice": 88000,
+    "botPrice": 22000,
     "vintage": "2020",
     "badge": "Premium",
     "imgKey": "angelica_cabsauv2020",
