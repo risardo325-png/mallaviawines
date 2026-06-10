@@ -376,13 +376,13 @@
     "imgScale": 1.35
   },
   {
-    "id": 33,
+    "id": "33",
     "name": "Angelica Zapata Merlot 2021",
     "brand": "Angelica Zapata",
     "type": "tinto",
     "varietal": "Merlot Alta · x4 botellas",
-    "cajaPrice": 85000,
-    "botPrice": 21250,
+    "cajaPrice": 88000,
+    "botPrice": 22000,
     "vintage": "2021",
     "badge": "Premium",
     "imgKey": "angelica_merlot2021",
