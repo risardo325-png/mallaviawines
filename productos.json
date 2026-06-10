@@ -24,13 +24,13 @@
     "imgKey": "angelica_malbec"
   },
   {
-    "id": 3,
+    "id": "3",
     "name": "Angelica Zapata Cabernet Franc 2021",
     "brand": "Angelica Zapata",
     "type": "tinto",
     "varietal": "Cabernet Franc · x4 botellas",
-    "cajaPrice": 85000,
-    "botPrice": 21250,
+    "cajaPrice": 88000,
+    "botPrice": 22000,
     "vintage": "2021",
     "badge": "Premium",
     "imgKey": "angelica_cabfranc",
