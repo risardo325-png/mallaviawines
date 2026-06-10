@@ -350,13 +350,13 @@
     "imgKey": "corona330"
   },
   {
-    "id": 31,
+    "id": "31",
     "name": "Angelica Zapata Chardonnay",
     "brand": "Angelica Zapata",
     "type": "blanco",
     "varietal": "Chardonnay Alta · x4 botellas",
-    "cajaPrice": 85000,
-    "botPrice": 21250,
+    "cajaPrice": 88000,
+    "botPrice": 22000,
     "vintage": "",
     "badge": "Premium",
     "imgKey": "angelica_chardonnay",
