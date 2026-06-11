@@ -338,13 +338,13 @@
     "imgKey": "sf_rose"
   },
   {
-    "id": 28,
+    "id": "28",
     "name": "Cerveza Corona 330ml",
     "brand": "Corona",
     "type": "cerveza",
     "varietal": "Lager · Pack x6 botellas",
-    "cajaPrice": 15600,
-    "botPrice": 2600,
+    "cajaPrice": 16500,
+    "botPrice": 2750,
     "vintage": "",
     "badge": "",
     "imgKey": "corona330"
