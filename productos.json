@@ -627,7 +627,7 @@
     "imgKey": "umc_blanco"
   },
   {
-    "id": 50,
+    "id": "50",
     "name": "Salentein Brut Nature",
     "brand": "Salentein",
     "type": "espumante",
@@ -635,7 +635,7 @@
     "cajaPrice": 84000,
     "botPrice": 14000,
     "vintage": "",
-    "badge": "Nuevo",
+    "badge": "No Stock",
     "imgKey": "salentein_brut"
   },
   {
