@@ -553,5 +553,113 @@
     "vintage": "",
     "badge": "",
     "customImg": "img/dvcatenamalbecmalbec.png"
+  },
+  {
+    "id": 44,
+    "name": "Gran Tomero Malbec 2023",
+    "brand": "Tomero",
+    "type": "tinto",
+    "varietal": "Malbec Single Vineyard · Valle de Uco",
+    "cajaPrice": 90000,
+    "botPrice": 15000,
+    "vintage": "2023",
+    "badge": "Nuevo",
+    "imgKey": "gran_tomero_malbec"
+  },
+  {
+    "id": 45,
+    "name": "Tomero Malbec 2024",
+    "brand": "Tomero",
+    "type": "tinto",
+    "varietal": "Malbec · Mendoza",
+    "cajaPrice": 46800,
+    "botPrice": 7800,
+    "vintage": "2024",
+    "badge": "Nuevo",
+    "imgKey": "tomero_malbec"
+  },
+  {
+    "id": 46,
+    "name": "Tomero Cabernet Franc 2025",
+    "brand": "Tomero",
+    "type": "tinto",
+    "varietal": "Cabernet Franc · Mendoza",
+    "cajaPrice": 46800,
+    "botPrice": 7800,
+    "vintage": "2025",
+    "badge": "Nuevo",
+    "imgKey": "tomero_cabfranc"
+  },
+  {
+    "id": 47,
+    "name": "Tomero Sauvignon Blanc 2025",
+    "brand": "Tomero",
+    "type": "blanco",
+    "varietal": "Sauvignon Blanc · Mendoza",
+    "cajaPrice": 46800,
+    "botPrice": 7800,
+    "vintage": "2025",
+    "badge": "Nuevo",
+    "imgKey": "tomero_sauvblanc"
+  },
+  {
+    "id": 48,
+    "name": "Un Mundo Chiquito Malbec 2024",
+    "brand": "Un Mundo Chiquito",
+    "type": "tinto",
+    "varietal": "Malbec · Bodega Vistalba",
+    "cajaPrice": 33000,
+    "botPrice": 5500,
+    "vintage": "2024",
+    "badge": "Nuevo",
+    "imgKey": "umc_malbec"
+  },
+  {
+    "id": 49,
+    "name": "Un Mundo Chiquito Corte de Blancas",
+    "brand": "Un Mundo Chiquito",
+    "type": "blanco",
+    "varietal": "Corte de Blancas · Bodega Vistalba",
+    "cajaPrice": 33000,
+    "botPrice": 5500,
+    "vintage": "2022",
+    "badge": "Nuevo",
+    "imgKey": "umc_blanco"
+  },
+  {
+    "id": 50,
+    "name": "Salentein Brut Nature",
+    "brand": "Salentein",
+    "type": "espumante",
+    "varietal": "Cuvée Exceptionnelle · Valle de Uco",
+    "cajaPrice": 84000,
+    "botPrice": 14000,
+    "vintage": "",
+    "badge": "Nuevo",
+    "imgKey": "salentein_brut"
+  },
+  {
+    "id": 51,
+    "name": "Bombay Sapphire",
+    "brand": "Bombay Sapphire",
+    "type": "licor",
+    "varietal": "London Dry Gin",
+    "cajaPrice": 0,
+    "botPrice": 32000,
+    "vintage": "",
+    "badge": "Nuevo",
+    "imgKey": "bombay"
+  },
+  {
+    "id": 52,
+    "name": "Fernet Branca",
+    "brand": "Fratelli Branca",
+    "type": "licor",
+    "varietal": "Amaro · Italia",
+    "cajaPrice": 156000,
+    "botPrice": 26000,
+    "vintage": "",
+    "badge": "Nuevo",
+    "imgKey": "fernet_branca"
   }
 ]
