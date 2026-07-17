@@ -615,13 +615,13 @@
     "imgKey": "umc_malbec"
   },
   {
-    "id": 49,
+    "id": "49",
     "name": "Un Mundo Chiquito Corte de Blancas",
     "brand": "Un Mundo Chiquito",
     "type": "blanco",
     "varietal": "Corte de Blancas · Bodega Vistalba",
-    "cajaPrice": 33000,
-    "botPrice": 5500,
+    "cajaPrice": 36000,
+    "botPrice": 6000,
     "vintage": "2022",
     "badge": "Nuevo",
     "imgKey": "umc_blanco"
