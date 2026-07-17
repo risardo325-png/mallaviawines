@@ -651,13 +651,13 @@
     "imgKey": "bombay"
   },
   {
-    "id": 52,
+    "id": "52",
     "name": "Fernet Branca",
     "brand": "Fratelli Branca",
     "type": "licor",
     "varietal": "Amaro · Italia",
-    "cajaPrice": 156000,
-    "botPrice": 26000,
+    "cajaPrice": 144000,
+    "botPrice": 24000,
     "vintage": "",
     "badge": "Nuevo",
     "imgKey": "fernet_branca"
