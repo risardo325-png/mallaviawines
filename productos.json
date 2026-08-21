@@ -553,13 +553,13 @@
     "imgKey": "tomero_malbec"
   },
   {
-    "id": 47,
+    "id": "47",
     "name": "Tomero Sauvignon Blanc 2025",
     "brand": "Tomero",
     "type": "blanco",
     "varietal": "Sauvignon Blanc · Mendoza",
-    "cajaPrice": 46800,
-    "botPrice": 7800,
+    "cajaPrice": 56400,
+    "botPrice": 9400,
     "vintage": "2025",
     "badge": "Nuevo",
     "imgKey": "tomero_sauvblanc"
