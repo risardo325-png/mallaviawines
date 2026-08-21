@@ -541,13 +541,13 @@
     "imgKey": "tomero_cabfranc"
   },
   {
-    "id": 45,
+    "id": "45",
     "name": "Tomero Malbec 2024",
     "brand": "Tomero",
     "type": "tinto",
     "varietal": "Malbec · Mendoza",
-    "cajaPrice": 46800,
-    "botPrice": 7800,
+    "cajaPrice": 56400,
+    "botPrice": 9400,
     "vintage": "2024",
     "badge": "Nuevo",
     "imgKey": "tomero_malbec"
