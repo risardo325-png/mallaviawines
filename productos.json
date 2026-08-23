@@ -650,13 +650,13 @@
     "imgKey": "trumpeter_saublanc"
   },
   {
-    "id": 48,
+    "id": "48",
     "name": "Un Mundo Chiquito Malbec 2024",
     "brand": "Un Mundo Chiquito",
     "type": "tinto",
     "varietal": "Malbec · Bodega Vistalba",
-    "cajaPrice": 33000,
-    "botPrice": 5500,
+    "cajaPrice": 36000,
+    "botPrice": 6000,
     "vintage": "2024",
     "badge": "Nuevo",
     "imgKey": "umc_malbec"
