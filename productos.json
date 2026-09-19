@@ -21,7 +21,8 @@
     "botPrice": 6500,
     "vintage": "",
     "badge": "Nuevo",
-    "imgKey": "alamos_dulce_natural"
+    "imgKey": "alamos_dulce_natural",
+    "imgScale": 1.6
   },
   {
     "id": "3",
@@ -158,7 +159,8 @@
     "botPrice": 14000,
     "vintage": "",
     "badge": "Nuevo",
-    "imgKey": "dvcatena_pinot"
+    "imgKey": "dvcatena_pinot",
+    "imgScale": 1.2
   },
   {
     "id": 34,
@@ -233,7 +235,8 @@
     "botPrice": 14000,
     "vintage": "2024",
     "badge": "Nuevo",
-    "imgKey": "laposta_fazzio"
+    "imgKey": "laposta_fazzio",
+    "imgScale": 1.2
   },
   {
     "id": 55,
@@ -562,7 +565,8 @@
     "botPrice": 9400,
     "vintage": "2025",
     "badge": "Nuevo",
-    "imgKey": "tomero_rose_pinot_noir"
+    "imgKey": "tomero_rose_pinot_noir",
+    "imgScale": 1.2
   },
   {
     "id": 46,
