@@ -34,7 +34,8 @@
     "botPrice": 6500,
     "vintage": "",
     "badge": "Nuevo",
-    "imgKey": "alamos_cabsauv"
+    "imgKey": "alamos_cabsauv",
+    "imgScale": 0.92
   },
   {
     "id": 64,
@@ -46,7 +47,8 @@
     "botPrice": 6500,
     "vintage": "",
     "badge": "Nuevo",
-    "imgKey": "alamos_bonarda"
+    "imgKey": "alamos_bonarda",
+    "imgScale": 0.92
   },
   {
     "id": 65,
@@ -58,7 +60,8 @@
     "botPrice": 6500,
     "vintage": "",
     "badge": "Nuevo",
-    "imgKey": "alamos_cabfranc"
+    "imgKey": "alamos_cabfranc",
+    "imgScale": 0.92
   },
   {
     "id": 66,
@@ -70,7 +73,8 @@
     "botPrice": 6500,
     "vintage": "",
     "badge": "Nuevo",
-    "imgKey": "alamos_pinotnoir"
+    "imgKey": "alamos_pinotnoir",
+    "imgScale": 0.92
   },
   {
     "id": 67,
@@ -82,7 +86,8 @@
     "botPrice": 6500,
     "vintage": "",
     "badge": "Nuevo",
-    "imgKey": "alamos_rose"
+    "imgKey": "alamos_rose",
+    "imgScale": 0.92
   },
   {
     "id": "3",
