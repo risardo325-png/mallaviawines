@@ -92,6 +92,10 @@ nav { position:fixed; top:0; left:0; right:0; z-index:100; background:rgba(11,11
 
 .product-badge { position:absolute; top:12px; left:12px; z-index:3; background:var(--burgundy); padding:3px 8px; font-family:var(--sans); font-size:7px; font-weight:500; letter-spacing:2px; text-transform:uppercase; color:var(--cream); }
 .product-badge--new { background:#1a4a2a; }
+.product-card.soldout .product-img { opacity:.35; filter:grayscale(1); }
+.product-badge--sold { background:#2a2a2a; color:#bbb; border:1px solid #555; }
+.add-btn:disabled { opacity:.45; cursor:not-allowed; border-color:rgba(255,255,255,.15); color:#999; background:none; }
+.add-btn:disabled:hover { background:none; color:#999; border-color:rgba(255,255,255,.15); }
 .product-badge--gran { background:#1a1400; border:1px solid var(--gold); color:var(--gold); }
 
 .product-info { padding:20px 20px 14px; flex:1; }
@@ -342,22 +346,27 @@ let selectedPayment = null;
 
 const local_products_backup = [
   {id:1, name:"Alamos Malbec", brand:"Alamos", type:"tinto", varietal:"Malbec · Mendoza", cajaPrice:39000, botPrice:6500, vintage:"", badge:"", imgKey:"alamos"},
-  {id:60, name:"Alamos Dulce Natural", brand:"Alamos", type:"blanco", varietal:"Dulce Natural · Mendoza", cajaPrice:39000, botPrice:6500, vintage:"", badge:"Nuevo", imgKey:"alamos_dulce_natural", imgScale:0.8},
-  {id:"3", name:"Angelica Zapata Cabernet Franc 2021", brand:"Angelica Zapata", type:"tinto", varietal:"Cabernet Franc · x4 botellas", cajaPrice:92000, botPrice:23000, vintage:"2021", badge:"Premium", imgKey:"angelica_cabfranc", imgScale:1.35},
-  {id:"32", name:"Angelica Zapata Cabernet Sauv. 2020", brand:"Angelica Zapata", type:"tinto", varietal:"Cabernet Sauvignon Alta · x4 botellas", cajaPrice:92000, botPrice:23000, vintage:"2020", badge:"Premium", imgKey:"angelica_cabsauv2020", imgScale:1.35},
-  {id:2, name:"Angelica Zapata Malbec 2021", brand:"Angelica Zapata", type:"tinto", varietal:"Malbec Alta · x4 botellas", cajaPrice:100000, botPrice:25000, vintage:"2021", badge:"Premium", imgKey:"angelica_malbec"},
-  {id:"33", name:"Angelica Zapata Merlot 2021", brand:"Angelica Zapata", type:"tinto", varietal:"Merlot Alta · x4 botellas", cajaPrice:92000, botPrice:23000, vintage:"2021", badge:"Premium", imgKey:"angelica_merlot2021", imgScale:0.9},
-  {id:"31", name:"Angelica Zapata Chardonnay", brand:"Angelica Zapata", type:"blanco", varietal:"Chardonnay Alta · x4 botellas", cajaPrice:92000, botPrice:23000, vintage:"", badge:"Premium", imgKey:"angelica_chardonnay", imgScale:0.9},
-  {id:"2972-21", name:"Catena Zapata Birth of Cabernet Sauv. 2021", brand:"Catena Zapata", type:"tinto", varietal:"", cajaPrice:420000, botPrice:70000, vintage:"2021", badge:"", customImg:"img/catenazapatabirthofcabernet.png"},
-  {id:"28-9223", name:"Catena Zapata Malbec Argentino 2023", brand:"Catena Zapata", type:"tinto", varietal:"", cajaPrice:390000, botPrice:65000, vintage:"2023", badge:"", imgScale:1.4, customImg:"img/malbecargentino.jpg"},
-  {id:59, name:"Nicolás Catena Zapata 2022", brand:"Catena Zapata", type:"tinto", varietal:"", cajaPrice:492000, botPrice:82000, vintage:"2022", badge:"Nuevo", imgKey:"nicolas_catena_zapata"},
+  {id:60, name:"Alamos Dulce Natural", brand:"Alamos", type:"blanco", varietal:"Dulce Natural · Mendoza", cajaPrice:39000, botPrice:6500, vintage:"", badge:"Nuevo", imgKey:"alamos_dulce_natural", imgScale:1.6},
+  {id:63, name:"Alamos Cabernet Sauvignon", brand:"Alamos", type:"tinto", varietal:"Cabernet Sauvignon · Mendoza", cajaPrice:39000, botPrice:6500, vintage:"", badge:"Nuevo", imgKey:"alamos_cabsauv"},
+  {id:64, name:"Alamos Bonarda", brand:"Alamos", type:"tinto", varietal:"Bonarda · Valle de Uco", cajaPrice:39000, botPrice:6500, vintage:"", badge:"Nuevo", imgKey:"alamos_bonarda"},
+  {id:65, name:"Alamos Cabernet Franc", brand:"Alamos", type:"tinto", varietal:"Cabernet Franc · Valle de Uco", cajaPrice:39000, botPrice:6500, vintage:"", badge:"Nuevo", imgKey:"alamos_cabfranc"},
+  {id:66, name:"Alamos Pinot Noir", brand:"Alamos", type:"tinto", varietal:"Pinot Noir · Valle de Uco", cajaPrice:39000, botPrice:6500, vintage:"", badge:"Nuevo", imgKey:"alamos_pinotnoir"},
+  {id:67, name:"Alamos Rosé", brand:"Alamos", type:"rosado", varietal:"Rosé · Mendoza", cajaPrice:39000, botPrice:6500, vintage:"", badge:"Nuevo", imgKey:"alamos_rose"},
+  {id:"3", name:"Angelica Zapata Cabernet Franc 2021", brand:"Angelica Zapata", type:"tinto", varietal:"Cabernet Franc · x4 botellas", cajaPrice:98000, botPrice:24500, vintage:"2021", badge:"Premium", imgKey:"angelica_cabfranc", imgScale:1.35},
+  {id:"32", name:"Angelica Zapata Cabernet Sauv. 2020", brand:"Angelica Zapata", type:"tinto", varietal:"Cabernet Sauvignon Alta · x4 botellas", cajaPrice:98000, botPrice:24500, vintage:"2020", badge:"Premium", imgKey:"angelica_cabsauv2020", imgScale:1.35},
+  {id:2, name:"Angelica Zapata Malbec 2021", brand:"Angelica Zapata", type:"tinto", varietal:"Malbec Alta · x4 botellas", cajaPrice:106000, botPrice:26500, vintage:"2021", badge:"Premium", imgKey:"angelica_malbec"},
+  {id:"33", name:"Angelica Zapata Merlot 2021", brand:"Angelica Zapata", type:"tinto", varietal:"Merlot Alta · x4 botellas", cajaPrice:92000, botPrice:23000, vintage:"2021", badge:"Premium", imgKey:"angelica_merlot2021", imgScale:0.9, sinStock:true},
+  {id:"31", name:"Angelica Zapata Chardonnay", brand:"Angelica Zapata", type:"blanco", varietal:"Chardonnay Alta · x4 botellas", cajaPrice:98000, botPrice:24500, vintage:"", badge:"Premium", imgKey:"angelica_chardonnay", imgScale:0.9},
+  {id:"2972-21", name:"Catena Zapata Birth of Cabernet Sauv. 2021", brand:"Catena Zapata", type:"tinto", varietal:"", cajaPrice:441000, botPrice:73500, vintage:"2021", badge:"", customImg:"img/catenazapatabirthofcabernet.png"},
+  {id:"28-9223", name:"Catena Zapata Malbec Argentino 2023", brand:"Catena Zapata", type:"tinto", varietal:"", cajaPrice:460200, botPrice:76700, vintage:"2023", badge:"", imgScale:1.4, customImg:"img/malbecargentino.jpg"},
+  {id:59, name:"Nicolás Catena Zapata 2022", brand:"Catena Zapata", type:"tinto", varietal:"", cajaPrice:516600, botPrice:86100, vintage:"2022", badge:"Nuevo", imgKey:"nicolas_catena_zapata"},
   {id:6, name:"DV Catena Cabernet/Malbec", brand:"DV Catena", type:"tinto", varietal:"Cabernet Sauvignon / Malbec", cajaPrice:78000, botPrice:13000, vintage:"", badge:"", imgKey:"dvcatena"},
   {id:"2200-24", name:"DV Catena Malbec/Malbec", brand:"DV Catena", type:"tinto", varietal:"", cajaPrice:102600, botPrice:17100, vintage:"", badge:"", customImg:"img/dvcatenamalbecmalbec.png"},
   {id:61, name:"DV Catena Pinot Pinot", brand:"DV Catena", type:"tinto", varietal:"Pinot Noir", cajaPrice:84000, botPrice:14000, vintage:"", badge:"Nuevo", imgKey:"dvcatena_pinot", imgScale:1.2},
   {id:34, name:"El Enemigo Bonarda 2022", brand:"El Enemigo", type:"tinto", varietal:"Bonarda · Mendoza", cajaPrice:129000, botPrice:21500, vintage:"2022", badge:"Nuevo", imgKey:"elenemigo_bonarda", imgScale:0.9},
   {id:35, name:"El Enemigo Cabernet Franc 2022", brand:"El Enemigo", type:"tinto", varietal:"Cabernet Franc · Mendoza", cajaPrice:129000, botPrice:21500, vintage:"2022", badge:"Nuevo", imgKey:"elenemigo_cabfranc", imgScale:0.9},
   {id:4, name:"El Enemigo Malbec", brand:"El Enemigo", type:"tinto", varietal:"Malbec · Mendoza", cajaPrice:129000, botPrice:21500, vintage:"", badge:"Destacado", imgKey:"elenemigo", imgScale:1.6},
-  {id:5, name:"Gran Enemigo Cabernet Franc", brand:"El Enemigo", type:"tinto", varietal:"Cabernet Franc · Single Vineyard", cajaPrice:282000, botPrice:47000, vintage:"", badge:"Gran Reserva", imgKey:"granenemigo"},
+  {id:5, name:"Gran Enemigo Cabernet Franc", brand:"El Enemigo", type:"tinto", varietal:"Cabernet Franc · Single Vineyard", cajaPrice:366000, botPrice:61000, vintage:"", badge:"Gran Reserva", imgKey:"granenemigo"},
   {id:54, name:"La Posta Pizzella Malbec 2024", brand:"La Posta", type:"tinto", varietal:"Malbec · Familia Pizzella · Mendoza", cajaPrice:84000, botPrice:14000, vintage:"2024", badge:"Nuevo", imgKey:"laposta_pizzella"},
   {id:62, name:"La Posta Fazzio Malbec 2024", brand:"La Posta", type:"tinto", varietal:"Malbec · Familia Fazzio · Mendoza", cajaPrice:84000, botPrice:14000, vintage:"2024", badge:"Nuevo", imgKey:"laposta_fazzio", imgScale:1.2},
   {id:55, name:"Luca Old Vine Malbec 2023", brand:"Luca", type:"tinto", varietal:"Old Vine Malbec · Valle de Uco", cajaPrice:180000, botPrice:30000, vintage:"2023", badge:"Nuevo", imgKey:"luca_oldvine_malbec"},
@@ -380,9 +389,9 @@ const local_products_backup = [
   {id:15, name:"Saint Felicien Malbec", brand:"Saint Felicien", type:"tinto", varietal:"Malbec · Familia Catena", cajaPrice:56400, botPrice:9400, vintage:"", badge:"", imgKey:"sf_malbec"},
   {id:16, name:"Saint Felicien Pinot Noir", brand:"Saint Felicien", type:"tinto", varietal:"Pinot Noir · Familia Catena", cajaPrice:56400, botPrice:9400, vintage:"", badge:"", imgKey:"sf_pinotnoir"},
   {id:"27", name:"Saint Felicien Syrah-Malbec Rosé", brand:"Saint Felicien", type:"rosado", varietal:"Syrah-Malbec Rosé · x4 botellas", cajaPrice:128000, botPrice:32000, vintage:"", badge:"", imgKey:"sf_rose"},
-  {id:17, name:"San Felipe 12 Uvas", brand:"San Felipe", type:"tinto", varietal:"12 Uvas · Maipú, Mendoza", cajaPrice:29700, botPrice:4950, vintage:"", badge:"", imgKey:"sanfelipe_12uvas"},
-  {id:18, name:"San Felipe Tinto", brand:"San Felipe", type:"tinto", varietal:"Tinto · Maipú, Mendoza", cajaPrice:29700, botPrice:4950, vintage:"", badge:"", imgKey:"sanfelipe_tinto"},
-  {id:25, name:"San Felipe Blanco", brand:"San Felipe", type:"blanco", varietal:"Blanco · Maipú, Mendoza", cajaPrice:29700, botPrice:4950, vintage:"", badge:"", imgKey:"sanfelipe_blanco"},
+  {id:17, name:"San Felipe 12 Uvas", brand:"San Felipe", type:"tinto", varietal:"12 Uvas · Maipú, Mendoza", cajaPrice:30000, botPrice:5000, vintage:"", badge:"", imgKey:"sanfelipe_12uvas"},
+  {id:18, name:"San Felipe Tinto", brand:"San Felipe", type:"tinto", varietal:"Tinto · Maipú, Mendoza", cajaPrice:30000, botPrice:5000, vintage:"", badge:"", imgKey:"sanfelipe_tinto"},
+  {id:25, name:"San Felipe Blanco", brand:"San Felipe", type:"blanco", varietal:"Blanco · Maipú, Mendoza", cajaPrice:30000, botPrice:5000, vintage:"", badge:"", imgKey:"sanfelipe_blanco"},
   {id:56, name:"Tikal Amorío Blend de Malbec 2022", brand:"Tikal", type:"tinto", varietal:"Blend de Malbec · La Consulta, Valle de Uco", cajaPrice:180000, botPrice:30000, vintage:"2022", badge:"Nuevo", imgKey:"tikal_amorio"},
   {id:57, name:"Tikal Patriota Malbec-Bonarda 2022", brand:"Tikal", type:"tinto", varietal:"Malbec · Bonarda · La Consulta, Valle de Uco", cajaPrice:168000, botPrice:28000, vintage:"2022", badge:"Nuevo", imgKey:"tikal_patriota"},
   {id:44, name:"Gran Tomero Malbec 2023", brand:"Tomero", type:"tinto", varietal:"Malbec Single Vineyard · Valle de Uco", cajaPrice:102000, botPrice:17000, vintage:"2023", badge:"Nuevo", imgKey:"gran_tomero_malbec"},
@@ -390,21 +399,21 @@ const local_products_backup = [
   {id:46, name:"Tomero Cabernet Franc 2025", brand:"Tomero", type:"tinto", varietal:"Cabernet Franc · Mendoza", cajaPrice:56400, botPrice:9400, vintage:"2025", badge:"Nuevo", imgKey:"tomero_cabfranc"},
   {id:45, name:"Tomero Malbec 2024", brand:"Tomero", type:"tinto", varietal:"Malbec · Mendoza", cajaPrice:56400, botPrice:9400, vintage:"2024", badge:"Nuevo", imgKey:"tomero_malbec"},
   {id:47, name:"Tomero Sauvignon Blanc 2025", brand:"Tomero", type:"blanco", varietal:"Sauvignon Blanc · Mendoza", cajaPrice:56400, botPrice:9400, vintage:"2025", badge:"Nuevo", imgKey:"tomero_sauvblanc"},
-  {id:"19", name:"Trumpeter Cab. Sauvignon", brand:"Trumpeter", type:"tinto", varietal:"Cabernet Sauvignon · Rutini Wines", cajaPrice:47940, botPrice:7990, vintage:"", badge:"", imgKey:"trumpeter_cabsauv"},
-  {id:"20", name:"Trumpeter Cabernet/Franc", brand:"Trumpeter", type:"tinto", varietal:"Cabernet Franc · Rutini Wines", cajaPrice:47940, botPrice:7990, vintage:"", badge:"", imgKey:"trumpeter_cabfranc"},
-  {id:"21", name:"Trumpeter Malbec", brand:"Trumpeter", type:"tinto", varietal:"Malbec · Rutini Wines", cajaPrice:47940, botPrice:7990, vintage:"", badge:"", imgKey:"trumpeter_malbec"},
-  {id:"42", name:"Trumpeter Malbec Syrah", brand:"Trumpeter", type:"tinto", varietal:"Blend", cajaPrice:47940, botPrice:7990, vintage:"", badge:"Nuevo", imgKey:"trumpeter_malbec_syrah", imgScale:1.18},
-  {id:"30", name:"Trumpeter Merlot", brand:"Trumpeter", type:"tinto", varietal:"Merlot · Rutini Wines", cajaPrice:47940, botPrice:7990, vintage:"", badge:"", imgKey:"trumpeter_merlot"},
-  {id:"22", name:"Trumpeter Syrah", brand:"Trumpeter", type:"tinto", varietal:"Syrah · Rutini Wines", cajaPrice:47940, botPrice:7990, vintage:"", badge:"", imgKey:"trumpeter_syrah"},
-  {id:"26", name:"Trumpeter Sauvignon Blanc", brand:"Trumpeter", type:"blanco", varietal:"Sauvignon Blanc · Rutini Wines", cajaPrice:47940, botPrice:7990, vintage:"", badge:"", imgKey:"trumpeter_saublanc"},
+  {id:"19", name:"Trumpeter Cab. Sauvignon", brand:"Trumpeter", type:"tinto", varietal:"Cabernet Sauvignon · Rutini Wines", cajaPrice:48000, botPrice:8000, vintage:"", badge:"", imgKey:"trumpeter_cabsauv"},
+  {id:"20", name:"Trumpeter Cabernet/Franc", brand:"Trumpeter", type:"tinto", varietal:"Cabernet Franc · Rutini Wines", cajaPrice:48000, botPrice:8000, vintage:"", badge:"", imgKey:"trumpeter_cabfranc"},
+  {id:"21", name:"Trumpeter Malbec", brand:"Trumpeter", type:"tinto", varietal:"Malbec · Rutini Wines", cajaPrice:48000, botPrice:8000, vintage:"", badge:"", imgKey:"trumpeter_malbec"},
+  {id:"42", name:"Trumpeter Malbec Syrah", brand:"Trumpeter", type:"tinto", varietal:"Blend", cajaPrice:48000, botPrice:8000, vintage:"", badge:"Nuevo", imgKey:"trumpeter_malbec_syrah", imgScale:1.18},
+  {id:"30", name:"Trumpeter Merlot", brand:"Trumpeter", type:"tinto", varietal:"Merlot · Rutini Wines", cajaPrice:48000, botPrice:8000, vintage:"", badge:"", imgKey:"trumpeter_merlot"},
+  {id:"22", name:"Trumpeter Syrah", brand:"Trumpeter", type:"tinto", varietal:"Syrah · Rutini Wines", cajaPrice:48000, botPrice:8000, vintage:"", badge:"", imgKey:"trumpeter_syrah"},
+  {id:"26", name:"Trumpeter Sauvignon Blanc", brand:"Trumpeter", type:"blanco", varietal:"Sauvignon Blanc · Rutini Wines", cajaPrice:48000, botPrice:8000, vintage:"", badge:"", imgKey:"trumpeter_saublanc"},
   {id:48, name:"Un Mundo Chiquito Malbec 2024", brand:"Un Mundo Chiquito", type:"tinto", varietal:"Malbec · Bodega Vistalba", cajaPrice:36000, botPrice:6000, vintage:"2024", badge:"Nuevo", imgKey:"umc_malbec"},
   {id:49, name:"Un Mundo Chiquito Corte de Blancas", brand:"Un Mundo Chiquito", type:"blanco", varietal:"Corte de Blancas · Bodega Vistalba", cajaPrice:36000, botPrice:6000, vintage:"2022", badge:"Nuevo", imgKey:"umc_blanco"},
-  {id:51, name:"Bombay Sapphire", brand:"Bombay Sapphire", type:"licor", varietal:"London Dry Gin", cajaPrice:0, botPrice:32000, vintage:"", badge:"Nuevo", imgKey:"bombay"},
+  {id:51, name:"Bombay Sapphire", brand:"Bombay Sapphire", type:"licor", varietal:"London Dry Gin", cajaPrice:32000, botPrice:32000, vintage:"", badge:"Nuevo", imgKey:"bombay"},
   {id:52, name:"Fernet Branca", brand:"Fratelli Branca", type:"licor", varietal:"Amaro · Italia", cajaPrice:156000, botPrice:26000, vintage:"", badge:"Nuevo", imgKey:"fernet_branca"},
-  {id:"28", name:"Cerveza Corona 330ml", brand:"Corona", type:"cerveza", varietal:"Lager · Pack x6 botellas", cajaPrice:18600, botPrice:3100, vintage:"", badge:"", imgKey:"corona330"},
-  {id:"29", name:"Cerveza Corona Cero 330ml", brand:"Corona", type:"cerveza", varietal:"Sin Alcohol 0.0% · Pack x4 botellas", cajaPrice:10400, botPrice:2600, vintage:"", badge:"Sin Alcohol", imgKey:"coronacero"},
+  {id:"28", name:"Cerveza Corona 330ml", brand:"Corona", type:"cerveza", varietal:"Lager · Pack x6 botellas", cajaPrice:19200, botPrice:3200, vintage:"", badge:"", imgKey:"corona330"},
+  {id:"29", name:"Cerveza Corona Cero 330ml", brand:"Corona", type:"cerveza", varietal:"Sin Alcohol 0.0% · Pack x4 botellas", cajaPrice:10800, botPrice:2700, vintage:"", badge:"Sin Alcohol", imgKey:"coronacero"},
   {id:43, name:"Heineken Pack x6", brand:"Heineken", type:"cerveza", varietal:"473cc", cajaPrice:21240, botPrice:3540, vintage:"", badge:"Nuevo", imgKey:"heineken6", imgScale:1.18},
-  {id:50, name:"Salentein Brut Nature", brand:"Salentein", type:"espumante", varietal:"Cuvée Exceptionnelle · Valle de Uco", cajaPrice:84000, botPrice:14000, vintage:"", badge:"Nuevo", imgKey:"salentein_brut"},
+  {id:50, name:"Salentein Brut Nature", brand:"Salentein", type:"espumante", varietal:"Cuvée Exceptionnelle · Valle de Uco", cajaPrice:84000, botPrice:14000, vintage:"", badge:"Nuevo", imgKey:"salentein_brut", sinStock:true}
 ];
 
 let cart={}, currentFilter="all", currentSearch="";
@@ -426,7 +435,8 @@ function renderProducts(list){
   }
   list.forEach((p,i)=>{
     const imgSrc = p.customImg || `img/${p.imgKey}.png`;
-    const badgeHtml=p.badge?`<div class="${badgeClass(p.badge)}">${p.badge}</div>`:"";
+    const sold=!!p.sinStock;
+    const badgeHtml=sold?`<div class="product-badge product-badge--sold">Sin stock</div>`:(p.badge?`<div class="${badgeClass(p.badge)}">${p.badge}</div>`:"");
     const vintTag=p.vintage?` · ${p.vintage}`:"";
     const cajaHtml=p.cajaPrice>0
       ?`<div class="price-group"><div class="price-label">Caja</div><div class="price-val" style="font-size:17px;">${fmt(p.cajaPrice)}</div></div>`
@@ -434,7 +444,7 @@ function renderProducts(list){
     const inCart=cart[p.id]&&cart[p.id].qty>0;
     const qty=inCart?cart[p.id].qty:0;
     grid.innerHTML+=`
-    <div class="product-card" data-type="${p.type}" data-name="${p.name.toLowerCase()}" style="animation-delay:${i*0.035}s">
+    <div class="product-card${sold?" soldout":""}" data-type="${p.type}" data-name="${p.name.toLowerCase()}" style="animation-delay:${i*0.035}s">
       <div class="product-card-visual">
         ${badgeHtml}
         <div class="card-qty-badge ${inCart?'visible':''}" id="qbadge-${p.id}">${qty}</div>
@@ -448,7 +458,7 @@ function renderProducts(list){
       <div class="product-pricing">
         ${cajaHtml}
         <div class="price-group"><div class="price-label">Botella</div><div class="price-val">${fmt(p.botPrice)}</div></div>
-        <button class="add-btn ${inCart?"added":""}" id="btn-${p.id}" onclick="addToCart('${p.id}')">${inCart?"✓ Listo":"+ Agregar"}</button>
+        ${sold?`<button class="add-btn" disabled>Sin stock</button>`:`<button class="add-btn ${inCart?"added":""}" id="btn-${p.id}" onclick="addToCart('${p.id}')">${inCart?"✓ Listo":"+ Agregar"}</button>`}
       </div>
     </div>`;
   });
@@ -479,6 +489,7 @@ function sortCatalog(val){
 function addToCart(id){
   const p=products.find(x=>String(x.id) === String(id));
   if(!p) return;
+  if(p.sinStock){showToast("Sin stock");return;}
   if(cart[String(id)]) cart[String(id)].qty++; else cart[String(id)]={product:p,qty:1};
   updateCartUI();
   updateCardBadge(id);
@@ -619,8 +630,10 @@ fetch('productos.json?t=' + Date.now())
       products = local_products_backup;
       renderProducts(products);
     } else {
-      document.getElementById('productGrid').innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:#C8A96A;">El cat�logo se est� actualizando. Por favor, refresca la p�gina en unos segundos.</div>';
+      document.getElementById('productGrid').innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:#C8A96A;">El cat�logo se est� actualizando. Por favor, refresca la p�gina en unos segundos.</div>';
     }
   });</script>
 </body>
 </html>
+
+
